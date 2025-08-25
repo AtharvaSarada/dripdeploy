@@ -51,7 +51,7 @@ This guide will help you deploy your DripNest e-commerce application for client 
    - **Environment**: `Node`
    - **Build Command**: `npm install && npm run render-build`
    - **Start Command**: `npm start`
-   - **Branch**: `main` (or your default branch)
+       - **Branch**: `master` (or your default branch)
 
 6. Add Environment Variables:
    ```

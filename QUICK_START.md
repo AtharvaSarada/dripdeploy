@@ -10,7 +10,7 @@ git init
 git add .
 git commit -m "Initial commit"
 git remote add origin <your-github-repo-url>
-git push -u origin main
+git push -u origin master
 ```
 
 ## Step 2: Set Up Free Services
