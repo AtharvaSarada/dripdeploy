@@ -1,0 +1,28 @@
+{
+  "name": "dripnest-ecommerce",
+  "version": "1.0.0",
+  "description": "DripNest - Premium Printed T-Shirt E-commerce Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "ecommerce",
+    "clothing",
+    "tshirts",
+    "dripnest"
+  ],
+  "author": "DripNest Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "mongodb": "^6.18.0"
+  }
+}
