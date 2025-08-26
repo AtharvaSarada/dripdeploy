@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd client && npm install --force && npm run build",
+  "buildCommand": "chmod +x build.sh && ./build.sh",
   "outputDirectory": "client/build",
   "framework": "create-react-app"
 }
