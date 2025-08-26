@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
 
+// Extend the Express Request interface to include user
 export interface AuthRequest extends Request {
   user?: IUser;
 }
@@ -9,8 +10,9 @@ export interface AuthRequest extends Request {
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   let token: string | undefined;
 
-  if (req.headers.authorization && typeof req.headers.authorization === 'string' && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  if (authHeader && typeof authHeader === 'string' && authHeader.startsWith('Bearer')) {
+    token = authHeader.split(' ')[1];
   }
 
   if (!token) {
