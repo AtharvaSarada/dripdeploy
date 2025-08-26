@@ -5,12 +5,13 @@ import User, { IUser } from '../models/User';
 // Extend the Express Request interface to include user
 export interface AuthRequest extends Request {
   user?: IUser;
+  headers: Request['headers'];
 }
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   let token: string | undefined;
 
-  const authHeader = req.headers.authorization;
+  const authHeader = (req as any).headers?.authorization;
   if (authHeader && typeof authHeader === 'string' && authHeader.startsWith('Bearer')) {
     token = authHeader.split(' ')[1];
   }
