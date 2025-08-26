@@ -1,6 +1,7 @@
 {
-  "outputDirectory": "build",
+  "outputDirectory": "client/build",
   "framework": "create-react-app",
+  "rootDirectory": "client",
   "rewrites": [
     {
       "source": "/api/(.*)",
