@@ -1,0 +1,16 @@
+# Copy this content and use Render's "Add from .env" feature:
+
+NODE_ENV=production
+PORT=10000
+MONGODB_URI=your_mongodb_connection_string_here
+JWT_SECRET=aa9fa3fd31c619e71dac18746f85180835028cce7a668c243ae95906819bfc8123fb961c4bc9f55514638bbb27db7a58f16005e00a1b9b90f67b10844f053507
+STRIPE_SECRET_KEY=sk_test_placeholder_for_now
+STRIPE_WEBHOOK_SECRET=whsec_placeholder_for_now
+GOOGLE_CLIENT_ID=placeholder_for_now
+GOOGLE_CLIENT_SECRET=placeholder_for_now
+GOOGLE_CALLBACK_URL=https://your-backend-url.onrender.com/api/auth/google/callback
+CLIENT_URL=https://your-frontend-url.vercel.app
+CLOUDINARY_CLOUD_NAME=dzgvtxkd6
+CLOUDINARY_API_KEY=336168142414357
+CLOUDINARY_API_SECRET=ty8og__D_ECmscUeuRMZBsjACK0
+CLOUDINARY_URL=cloudinary://336168142414357:ty8og__D_ECmscUeuRMZBsjACK0@dzgvtxkd6

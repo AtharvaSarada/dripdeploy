@@ -1,0 +1,7 @@
+# Add these lines to your server/.env file:
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=dzgvtxkd6
+CLOUDINARY_API_KEY=336168142414357
+CLOUDINARY_API_SECRET=ty8og__D_ECmscUeuRMZBsjACK0
+CLOUDINARY_URL=cloudinary://336168142414357:ty8og__D_ECmscUeuRMZBsjACK0@dzgvtxkd6
