@@ -51,9 +51,64 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration with support for comma-separated origins and wildcard subdomains
+const parseAllowedOrigins = (rawOrigins?: string): string[] => {
+  if (!rawOrigins) return [];
+  return rawOrigins
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
+};
+
+const isOriginAllowedByPattern = (requestOrigin: string, pattern: string): boolean => {
+  // Exact match when no wildcard is present
+  if (!pattern.includes('*')) return requestOrigin === pattern;
+
+  // Support patterns like https://*.vercel.app
+  const schemeSeparatorIndex = pattern.indexOf('://');
+  if (schemeSeparatorIndex === -1) {
+    // If scheme is missing, do a simple wildcard host match
+    const normalizedPatternHost = pattern.replace('*.', '');
+    try {
+      const reqUrl = new URL(requestOrigin);
+      return reqUrl.host.endsWith(`.${normalizedPatternHost}`) || reqUrl.host === normalizedPatternHost;
+    } catch {
+      return false;
+    }
+  }
+
+  const scheme = pattern.slice(0, schemeSeparatorIndex + 3); // includes ://
+  const hostPattern = pattern.slice(schemeSeparatorIndex + 3).replace('*.', '');
+  try {
+    const reqUrl = new URL(requestOrigin);
+    const schemeMatches = `${reqUrl.protocol}//` === scheme;
+    const hostMatches = reqUrl.host === hostPattern || reqUrl.host.endsWith(`.${hostPattern}`);
+    return schemeMatches && hostMatches;
+  } catch {
+    return false;
+  }
+};
+
+const allowedOriginPatterns = parseAllowedOrigins(process.env.ALLOWED_ORIGINS);
+const fallbackClientOrigin = process.env.CLIENT_URL || 'http://localhost:3000';
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g., curl, health checks) that have no origin
+    if (!origin) return callback(null, true);
+
+    // Check explicit patterns list first
+    const allowedByPatterns = allowedOriginPatterns.some((pattern) =>
+      isOriginAllowedByPattern(origin, pattern)
+    );
+
+    if (allowedByPatterns) return callback(null, true);
+
+    // Fallback to single CLIENT_URL exact match for backward compatibility
+    if (origin === fallbackClientOrigin) return callback(null, true);
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
 }));
 
