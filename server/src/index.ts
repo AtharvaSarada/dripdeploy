@@ -43,11 +43,22 @@ app.use(helmet({
   },
 }));
 
-// Rate limiting
+// Rate limiting (skip health checks and Render pings)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // higher ceiling to avoid false positives
+  standardHeaders: true,
+  legacyHeaders: false,
   message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => {
+    // Skip health and static assets
+    const ua = String(req.headers['user-agent'] || '');
+    const path = req.path || '';
+    if (path === '/health' || path === '/api/health') return true;
+    // Skip Render health prober
+    if (ua.includes('Render/1.0')) return true;
+    return false;
+  }
 });
 app.use('/api/', limiter);
 
@@ -129,7 +140,7 @@ if (process.env.NODE_ENV === 'development') {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health check endpoint
+// Health check endpoint (kept public and excluded from rate limits)
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
