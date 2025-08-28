@@ -80,16 +80,15 @@ const Home: React.FC = () => {
                   className="rounded-lg shadow-2xl"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-lg p-4 shadow-lg z-20">
-                <div className="flex items-center space-x-2">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <span className="text-sm font-medium text-secondary-900">4.9/5</span>
+              <div className="absolute -bottom-6 -left-6 bg-white rounded-lg p-4 shadow-lg z-20 max-w-xs">
+                <div className="flex items-center space-x-2 mb-1">
+                  <Shield className="h-4 w-4 text-primary-600" />
+                  <span className="text-sm font-semibold text-secondary-900">Premium Print Quality</span>
                 </div>
-                <p className="text-xs text-secondary-600 mt-1">Trusted by 10,000+ customers</p>
+                <p className="text-xs text-secondary-600">
+                  Vibrant, long‑lasting prints on ultra‑soft, breathable cotton. Fade‑resistant, crack‑resistant, and
+                  crafted for everyday comfort.
+                </p>
               </div>
             </motion.div>
           </div>
