@@ -1,4 +1,0 @@
-{
-  "buildCommand": "chmod +x debug-build.sh && ./debug-build.sh",
-  "framework": "create-react-app"
-}
