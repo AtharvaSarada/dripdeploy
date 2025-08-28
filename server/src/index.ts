@@ -6,10 +6,12 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import path from 'path';
+import mongoose from 'mongoose';
 
 import { connectDB } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import { notFound } from './middleware/notFound';
+import { checkDatabaseConnection } from './middleware/dbCheck';
 
 // Routes
 import authRoutes from './routes/auth';
@@ -140,12 +142,22 @@ if (process.env.NODE_ENV === 'development') {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Database connection check middleware (applied to all API routes)
+app.use('/api', checkDatabaseConnection);
+
 // Health check endpoint (kept public and excluded from rate limits)
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'DripNest API is running',
-    timestamp: new Date().toISOString()
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  const isHealthy = dbStatus === 'connected';
+  
+  res.status(isHealthy ? 200 : 503).json({ 
+    status: isHealthy ? 'OK' : 'SERVICE_UNAVAILABLE',
+    message: isHealthy ? 'DripNest API is running' : 'Database connection issue',
+    timestamp: new Date().toISOString(),
+    database: {
+      status: dbStatus,
+      readyState: mongoose.connection.readyState
+    }
   });
 });
 

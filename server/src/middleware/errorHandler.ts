@@ -29,6 +29,18 @@ export const errorHandler = (
     error = { message, statusCode: 400 } as CustomError;
   }
 
+  // MongoDB connection errors
+  if (err.name === 'MongoNetworkError' || err.name === 'MongoTimeoutError') {
+    const message = 'Database connection error. Please try again later.';
+    error = { message, statusCode: 503 } as CustomError;
+  }
+
+  // MongoDB server selection timeout
+  if (err.name === 'MongoServerSelectionError') {
+    const message = 'Database service unavailable. Please try again later.';
+    error = { message, statusCode: 503 } as CustomError;
+  }
+
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     const message = Object.values((err as any).errors).map((val: any) => val.message).join(', ');
