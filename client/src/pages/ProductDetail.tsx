@@ -31,6 +31,7 @@ const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
 
@@ -175,12 +176,12 @@ const ProductDetail: React.FC = () => {
             className="space-y-4"
           >
             {/* Main Image */}
-            <div className="aspect-square bg-secondary-100 rounded-lg overflow-hidden">
+            <div className="aspect-square bg-secondary-100 rounded-lg overflow-hidden cursor-zoom-in" onClick={() => setIsLightboxOpen(true)}>
               {productData.images && productData.images.length > 0 ? (
                 <img
                   src={getSafeImageUrl(productData.images[selectedImage])}
                   alt={productData.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder-image.jpg';
                   }}
@@ -515,6 +516,67 @@ const ProductDetail: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <button
+            aria-label="Close"
+            className="absolute top-4 right-4 text-white bg-black/40 hover:bg-black/60 rounded-full px-3 py-1"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLightboxOpen(false);
+            }}
+          >
+            Close
+          </button>
+
+          {/* Prev */}
+          {productData.images?.length > 1 && (
+            <button
+              aria-label="Previous image"
+              className="absolute left-4 text-white bg-black/40 hover:bg-black/60 rounded-full px-3 py-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage((prev) =>
+                  prev === 0 ? productData.images.length - 1 : prev - 1
+                );
+              }}
+            >
+              ‹
+            </button>
+          )}
+
+          <img
+            src={getSafeImageUrl(productData.images[selectedImage])}
+            alt={productData.name}
+            className="max-w-[95vw] max-h-[85vh] object-contain rounded"
+            onClick={(e) => e.stopPropagation()}
+            onError={(e) => {
+              e.currentTarget.src = '/placeholder-image.jpg';
+            }}
+          />
+
+          {/* Next */}
+          {productData.images?.length > 1 && (
+            <button
+              aria-label="Next image"
+              className="absolute right-4 text-white bg-black/40 hover:bg-black/60 rounded-full px-3 py-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage((prev) =>
+                  prev === productData.images.length - 1 ? 0 : prev + 1
+                );
+              }}
+            >
+              ›
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
