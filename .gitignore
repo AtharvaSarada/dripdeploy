@@ -74,7 +74,10 @@ dist
 
 # Gatsby files
 .cache/
-public
+/public
+# Ensure CRA client/public is tracked
+!client/public/
+!client/public/**
 
 # Storybook build outputs
 .out
