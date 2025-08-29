@@ -9,7 +9,7 @@ export const connectDB = async (): Promise<void> => {
       const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/dripnest';
       
       // Connection options for better stability (using modern MongoDB options)
-      const options = {
+      const options: mongoose.ConnectOptions = {
         maxPoolSize: 10, // Maximum number of connections in the pool
         serverSelectionTimeoutMS: 5000, // Timeout for server selection
         socketTimeoutMS: 45000, // Timeout for socket operations
@@ -17,7 +17,6 @@ export const connectDB = async (): Promise<void> => {
         bufferCommands: false, // Disable mongoose buffering
         // Modern MongoDB options (replaces deprecated autoReconnect, etc.)
         retryWrites: true,
-        w: 'majority',
         // Connection pool settings
         minPoolSize: 1,
         maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
@@ -25,8 +24,6 @@ export const connectDB = async (): Promise<void> => {
         heartbeatFrequencyMS: 10000, // Send heartbeat every 10 seconds
         // Timeout settings
         connectTimeoutMS: 10000, // 10 seconds to establish initial connection
-        // Write concern
-        writeConcern: { w: 'majority', j: true }
       };
       
       await mongoose.connect(mongoURI, options);
